@@ -49,6 +49,20 @@ app.get('/page/login', (req, res) => {
 app.get('/page/welcome', (req, res) => {
   res.sendFile(path.join(__dirname, 'public', 'welcomePage.html'));
 });
+app.get('/logout', (req, res) => {
+  req.logout((err) => {
+      if (err) {
+          return next(err);
+      }
+      req.session.destroy((err) => {
+          if (err) {
+              return next(err);
+          }
+          res.clearCookie('connect.sid'); // 쿠키 삭제
+          res.redirect('/'); // 로그인 페이지로 리다이렉트
+      });
+  });
+});
 
 // 라우터 설정
 app.use('/api/user', userRoutes);           // 사용자 관련 API 라우트

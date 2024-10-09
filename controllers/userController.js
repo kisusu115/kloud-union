@@ -1,4 +1,5 @@
 const User = require('../models/userModel');
+const { getAllUsers } = require('../services/userService');
 
 // 카카오 로그인 창으로 리다이렉트
 const redirectToKakao = async (req, res) => {
@@ -12,7 +13,7 @@ const redirectToKakao = async (req, res) => {
 // 모든 사용자 조회
 const getUsers = async (req, res) => {
   try {
-    const users = await User.find();
+    const users = await getAllUsers();
     res.json(users);
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving users', error });

@@ -16,9 +16,8 @@ const kakaoAuthenticateCallback = async (req, res, next) => {
         res.redirect('/page/welcome');
     });
 };
-  
+
 module.exports = {
     kakaoAuthenticate,
     kakaoAuthenticateCallback,
 };
-  

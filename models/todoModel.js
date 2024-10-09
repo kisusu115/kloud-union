@@ -1,22 +1,19 @@
-const mongoose = require('mongoose');
-
-// 사용자 스키마 정의
 const todoSchema = new mongoose.Schema({
-  name: {
+  userSnsId: {
     type: String,
     required: true,
+    ref: 'User',
   },
-  email: {
-    type: String,
+  timeTaken: {
+    type: Number,
     required: true,
-    unique: true,
   },
-  password: {
+  content: {
     type: String,
     required: true,
   },
 }, { timestamps: true });
 
-const Todo = mongoose.model('Todo', todoSchema); // const User = mongoose.model('Todo', todoSchema, 'todo_collection_name');
+ const Todo = mongoose.model('Todo', todoSchema);
 
-module.exports = Todo;
+ module.exports = Todo

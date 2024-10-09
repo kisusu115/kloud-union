@@ -21,7 +21,14 @@
 
     <script>
         function kakaoLogin() {
-            window.location.href = '/api/user/login';
+            // 동적으로 폼 생성
+            const form = document.createElement('form');
+            form.method = 'POST';
+            form.action = '/api/user/login';
+
+            // 폼을 body에 추가하고 제출
+            document.body.appendChild(form);
+            form.submit();
         }
     </script>
 </body>

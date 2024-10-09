@@ -1,20 +1,32 @@
 const mongoose = require('mongoose');
 
-// 사용자 스키마 정의
 const userSchema = new mongoose.Schema({
+  snsId: {
+    type: String,
+    required: true,
+    unique: true,
+  },
   nickname: {
     type: String,
     required: true,
   },
-  snsId: {
-    type: String,
+  weight: {
+    type: Number,
     required: true,
-    unique: true, // 소셜 플랫폼에서 제공하는 고유 ID
+    default: 1,
   },
-  providerType: {
+  age: {
+    type: Number,
+    default: null,
+  },
+  gender: {
     type: String,
-    enum: ['kakao', 'google', 'facebook'], // 일단 kakao 만 구현 예정이긴함
-    required: true,
+    enum: ['Male', 'Female'],
+    default: null,
+  },
+  height: {
+    type: Number,
+    default: null,
   },
 }, { timestamps: true });
 
