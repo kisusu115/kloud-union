@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>로그인</title>
+    <link rel="stylesheet" href="/css/styles.css"> <!-- 분리된 CSS 파일을 링크 -->
+</head>
+<body>
+    <div class="page">
+        <div class="titleWrap">
+            로그인
+        </div>
+        <div class="contentWrap">
+            <button class="socialButton kakaoButton" onclick="kakaoLogin()">
+                <img src="/images/kakao_logo.png" alt="Kakao" class="socialLogo"/>
+                카카오톡으로 로그인
+            </button>
+        </div>
+    </div>
+
+    <script>
+        function kakaoLogin() {
+            window.location.href = '/api/user/login';
+        }
+    </script>
+</body>
+</html>
