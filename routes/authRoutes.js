@@ -3,9 +3,34 @@ const { kakaoAuthenticate, kakaoAuthenticateCallback } = require('../controllers
 
 const router = express.Router();
 
+/**
+ * @swagger
+ * /auth/kakao:
+ *   get:
+ *     summary: 카카오 인증 페이지로 리다이렉트
+ *     description: 사용자가 카카오 로그인 페이지로 리다이렉트됩니다.
+ *     responses:
+ *       302:
+ *         description: 카카오 로그인 페이지로 성공적으로 리다이렉트됩니다.
+ *       500:
+ *         description: 서버 오류 발생.
+ */
 router.get('/kakao', kakaoAuthenticate);
 
-// 위에서 카카오 서버 로그인이 되면, 카카오 redirect url 설정에 따라 자동으로 이 라우터로 오게 됨.
+/**
+ * @swagger
+ * /auth/kakao/callback:
+ *   get:
+ *     summary: 카카오 로그인 인증 콜백
+ *     description: 카카오 로그인이 성공하면 카카오가 이 URL로 리다이렉트합니다. 실패하면 `/`로 리다이렉트됩니다.
+ *     responses:
+ *       302:
+ *         description: 성공적으로 인증된 후 환영 페이지로 리다이렉트됩니다.
+ *       400:
+ *         description: 인증이 실패하여 루트 페이지로 리다이렉트됩니다.
+ *       500:
+ *         description: 서버 오류 발생.
+ */
 router.get('/kakao/callback', kakaoAuthenticateCallback);
 
 module.exports = router;
