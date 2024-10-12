@@ -1,5 +1,5 @@
 const express = require('express');
-const { getStationChoices } = require('../controllers/subwayController');
+const { getStationChoices, getStationTimeTable } = require('../controllers/subwayController');
 
 const router = express.Router();
 
@@ -90,7 +90,88 @@ const router = express.Router();
  *                   type: string
  *                   example: "Server error"
  */
-
 router.get('/choices', getStationChoices);
+
+/**
+ * @swagger
+ * /api/subway/timeTable:
+ *   post:
+ *     summary: 특정 역의 지하철 시간표 조회
+ *     tags: [Subway]
+ *     description: 주어진 역 이름, 노선 번호, 상하행 정보를 기반으로 해당 역의 지하철 시간표를 조회합니다.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               stationName:
+ *                 type: string
+ *                 description: 사용자가 선택한 지하철 역 이름
+ *                 example: "건대입구"
+ *               line:
+ *                 type: number
+ *                 description: 사용자가 선택한 지하철 노선 번호
+ *                 example: 2
+ *               upDown:
+ *                 type: number
+ *                 description: 상행선(1) 또는 하행선(2)
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: 해당 역의 지하철 시간표 반환
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: array
+ *               items:
+ *                 type: string
+ *                 example: "05:43:20"
+ *             examples:
+ *               example-1:
+ *                 value: [
+ *                   "05:43:20",
+ *                   "05:54:30",
+ *                   "06:07:30",
+ *                   "06:19:20",
+ *                   "06:29:20",
+ *                   "06:40:50",
+ *                   "06:48:20",
+ *                   "06:55:50",
+ *                   "07:02:50"
+ *                 ]
+ *       400:
+ *         description: 요청 파라미터가 잘못되었거나 누락되었습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "stationName, line, or upDown is required"
+ *       404:
+ *         description: 해당 역의 시간표를 찾을 수 없습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "No timetable found for the given station"
+ *       500:
+ *         description: 서버 오류 발생
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Server error"
+ */
+router.post('/timeTable', getStationTimeTable);
 
 module.exports = router;
