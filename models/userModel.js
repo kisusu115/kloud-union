@@ -7,10 +7,6 @@ const mongoose = require('mongoose');
  *      User:
  *        type: object
  *        properties:
- *          _id:
- *            type: string
- *            description: 사용자 MongoDB ID
- *            example: '670a061f58d6a0a0526021c7'
  *          snsId:
  *            type: string
  *            description: kakao 발급 id
@@ -38,6 +34,14 @@ const mongoose = require('mongoose');
  *            type: number
  *            description: 사용자 키 (cm 단위)
  *            example: 175
+ *          stationName:
+ *            type: string
+ *            description: 사용자가 지정한 역 이름
+ *            example: '건대입구'
+ *          line:
+ *            type: number
+ *            description: 사용자가 사용하는 호선 번호
+ *            example: 2
  *          createdAt:
  *            type: string
  *            format: date-time
@@ -84,6 +88,19 @@ const userSchema = new mongoose.Schema({
   },
   height: {
     type: Number,
+    default: null,
+  },
+  stationName: {
+    type: String,
+    default: null,
+  },
+  line: {
+    type: Number,
+    default: null,
+  },
+  upDown: {
+    type: Number,
+    enum: [1, 2],
     default: null,
   },
 }, { timestamps: true });
