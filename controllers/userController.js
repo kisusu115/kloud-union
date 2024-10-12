@@ -40,7 +40,6 @@ const getUserProfile = async (req, res) => {
 
 // 사용자 정보 수정
 const updateUserProfile = async (req, res) => {
-  
   const snsId = req.user ? req.user.snsId : null; // req.user가 정의되어 있는지 확인
 
   if (!snsId) {
@@ -62,9 +61,32 @@ const updateUserProfile = async (req, res) => {
   }
 };
 
+const updateUserStation = async (req, res) => {
+  const snsId = req.user ? req.user.snsId : null; // req.user가 정의되어 있는지 확인
+
+  if (!snsId) {
+      return res.status(400).json({ error: 'session\'s snsId is required' });
+  }
+  
+  const { stationName, line, upDown } = req.body;
+
+  try {
+    const user = await updateUserBySnsId(snsId, { stationName, line, upDown });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+}
+
 module.exports = {
   getUsers, 
   getUserProfile,
   updateUserProfile,
+  updateUserStation,
   redirectToKakao,
 };
