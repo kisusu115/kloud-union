@@ -1,6 +1,6 @@
 const express = require('express');
 const { getUsers, getUserProfile, updateUserProfile, redirectToKakao } = require('../controllers/userController');
-
+const { authenticateSession } = require('../middlewares/authMiddleware');
 const router = express.Router();
 
 // GET 요청으로 모든 사용자 조회
@@ -34,15 +34,7 @@ router.post('/login', redirectToKakao);
  *   get:
  *     summary: 특정 사용자 정보 조회
  *     tags: [User]
- *     description: snsId를 사용하여 특정 사용자의 정보를 조회합니다.
- *     parameters:
- *       - in: query
- *         name: snsId
- *         required: true
- *         description: 카카오 발급 ID
- *         schema:
- *           type: string
- *           example: '3739609966'
+ *     description: session을 통해 snsId를 사용하여 특정 사용자의 정보를 조회합니다.
  *     responses:
  *       200:
  *         description: 성공적으로 사용자 정보를 반환합니다.
@@ -50,8 +42,25 @@ router.post('/login', redirectToKakao);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
+ *             examples:
+ *               user:
+ *                 value: {
+ *                   "_id": "670a82d3149a8c0f5689f57f",
+ *                   "snsId": "3739459145",
+ *                   "nickname": "제형",
+ *                   "weight": 1,
+ *                   "age": null,
+ *                   "gender": null,
+ *                   "height": null,
+ *                   "stationName": null,
+ *                   "line": null,
+ *                   "upDown": null,
+ *                   "createdAt": "2024-10-12T14:08:19.219Z",
+ *                   "updatedAt": "2024-10-12T14:08:19.219Z",
+ *                   "__v": 0
+ *                 }
  *       400:
- *         description: 요청에 snsId가 포함되지 않았습니다.
+ *         description: session에 snsId가 포함되지 않았습니다.
  *         content:
  *           application/json:
  *             schema:
@@ -81,7 +90,7 @@ router.post('/login', redirectToKakao);
  *                   type: string
  *                   example: 'Server error'
  */
-router.get('/profile', getUserProfile);
+router.get('/profile', authenticateSession, getUserProfile);
 
 /**
  * @swagger
@@ -89,7 +98,7 @@ router.get('/profile', getUserProfile);
  *   post:
  *     summary: 사용자 정보 수정
  *     tags: [User]
- *     description: 사용자 정보를 수정합니다. snsId로 사용자를 식별하고 나이, 성별, 키 등의 정보를 수정할 수 있습니다.
+ *     description: 사용자 정보를 수정합니다. 나이, 성별, 키 등의 정보를 수정할 수 있습니다.
  *     requestBody:
  *       required: true
  *       content:
@@ -97,10 +106,6 @@ router.get('/profile', getUserProfile);
  *           schema:
  *             type: object
  *             properties:
- *               snsId:
- *                 type: string
- *                 description: 카카오 발급 ID
- *                 example: '3739609966'
  *               age:
  *                 type: number
  *                 description: 사용자의 나이
@@ -120,6 +125,23 @@ router.get('/profile', getUserProfile);
  *           application/json:
  *             schema:
  *               $ref: '#/components/schemas/User'
+ *             examples:
+ *               user:
+ *                 value: {
+ *                   "_id": "670a82d3149a8c0f5689f57f",
+ *                   "snsId": "3739459145",
+ *                   "nickname": "제형",
+ *                   "weight": 1,
+ *                   "age": null,
+ *                   "gender": null,
+ *                   "height": null,
+ *                   "stationName": null,
+ *                   "line": null,
+ *                   "upDown": null,
+ *                   "createdAt": "2024-10-12T14:08:19.219Z",
+ *                   "updatedAt": "2024-10-12T14:08:19.219Z",
+ *                   "__v": 0
+ *                 }
  *       400:
  *         description: 요청에 snsId가 포함되지 않았습니다.
  *         content:

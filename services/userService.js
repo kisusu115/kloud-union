@@ -14,7 +14,7 @@ const findUserBySnsId = async (snsId) => {
     try {
         return await User.findOne({ snsId });
     } catch (error) {
-        throw new Error('Error fetching user by snsId');
+        throw error;
     }
 };
 
