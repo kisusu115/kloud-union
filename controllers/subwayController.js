@@ -1,4 +1,4 @@
-const { getLinesByStationName } = require('../services/subwayService');
+const { getLinesByStationName, getStationCode, getTimeTable } = require('../services/subwayService');
 
 // 지하철 역 선택 조회
 const getStationChoices = async (req, res) => {
@@ -32,6 +32,21 @@ const getStationChoices = async (req, res) => {
     }
 };
 
+// 지하철 역명, 라인, 상하행 정보를 받아 시간표 리스트 클라이언트에게 전달
+const getStationTimeTable = async (req, res) => {
+  const { stationName, line, upDown } = req.body;
+
+  try {
+    const stationCode = await getStationCode(stationName, line); // 역 코드 조회
+    const timeTable = await getTimeTable(stationCode, upDown); // 시간표 조회 및 정렬
+
+    res.json(timeTable); // 시간표 반환
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 module.exports = {
     getStationChoices,
+    getStationTimeTable,
 };

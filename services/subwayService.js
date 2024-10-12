@@ -1,4 +1,5 @@
-const Station = require('../models/stationModel'); // 경로는 실제 모델 위치에 맞게 수정하세요
+const axios = require('axios');
+const Station = require('../models/stationModel');
 
 // 주어진 stationName에 대해 line 값을 조회
 const getLinesByStationName = async (stationName) => {
@@ -14,6 +15,39 @@ const getLinesByStationName = async (stationName) => {
     }
 };
 
+const getStationCode = async (stationName, line) => {
+    const station = await Station.findOne({ name: stationName, line: line });
+    if (!station) throw new Error('Station not found');
+    return station.number; // 역 코드 반환
+};
+
+const getTimeTable = async (stationCode, upDown) => {
+    const url = `http://openAPI.seoul.go.kr:8088/534e51786a6b696b3634414c55584b/json/SearchSTNTimeTableByIDService/1/300/${stationCode}/1/${upDown}`;
+    
+    try {
+      const response = await axios.get(url);
+      const timeTable = response.data.SearchSTNTimeTableByIDService.row;
+
+      // ARRIVETIME 기준으로 정렬
+      timeTable.sort((a, b) => {
+        const timeA = new Date(`1970-01-01T${a.ARRIVETIME}`);
+        const timeB = new Date(`1970-01-01T${b.ARRIVETIME}`);
+        return timeA - timeB;
+      });
+
+      // ARRIVETIME 값 중 "00:00:00"을 제외한 리스트 반환
+      const arrivalTimes = timeTable
+        .map(train => train.ARRIVETIME)
+        .filter(time => time !== "00:00:00");
+
+      return arrivalTimes;
+    } catch (error) {
+      throw new Error('Error fetching timetable');
+    }
+};
+
 module.exports = {
     getLinesByStationName,
+    getStationCode,
+    getTimeTable
 };
