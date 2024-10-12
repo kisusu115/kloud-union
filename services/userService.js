@@ -1,41 +1,34 @@
 const User = require('../models/userModel');
 
-// 사용자 생성 서비스
-const createUser = async (userData) => {
-  try {
-    const user = new User(userData);
-    await user.save();
-    return user;
-  } catch (error) {
-    throw new Error('User creation failed: ' + error.message);
-  }
-};
-
-// 모든 사용자 조회 서비스
+// 모든 사용자 조회
 const getAllUsers = async () => {
-  try {
-    const users = await User.find();
-    return users;
-  } catch (error) {
-    throw new Error('Fetching users failed: ' + error.message);
-  }
+    try {
+        return await User.find();
+    } catch (error) {
+        throw new Error('Error fetching users');
+    }
 };
 
-// 특정 사용자 조회 서비스
-const getUserById = async (userId) => {
-  try {
-    const user = await User.findById(userId);
-    if (!user) {
-      throw new Error('User not found');
+// 특정 사용자 조회
+const findUserBySnsId = async (snsId) => {
+    try {
+        return await User.findOne({ snsId });
+    } catch (error) {
+        throw new Error('Error fetching user by snsId');
     }
-    return user;
-  } catch (error) {
-    throw new Error('Fetching user by ID failed: ' + error.message);
-  }
+};
+
+// 사용자 정보 수정
+const updateUserBySnsId = async (snsId, updateData) => {
+    try {
+        return await User.findOneAndUpdate({ snsId }, updateData, { new: true, runValidators: true });
+    } catch (error) {
+        throw new Error('Error updating user');
+    }
 };
 
 module.exports = {
-  createUser,
-  getAllUsers,
-  getUserById
+    getAllUsers,
+    findUserBySnsId,
+    updateUserBySnsId,
 };

@@ -10,6 +10,13 @@ const todoRoutes = require('./routes/todoRoutes');
 const alarmRoutes = require('./routes/alarmRoutes');
 const authRoutes = require('./routes/authRoutes');
 
+const swaggerJsDoc = require('swagger-jsdoc');
+const swaggerUi = require('swagger-ui-express');
+const swaggerOptions = require('./swagger'); // swagger.js 파일 가져오기
+
+// Swagger
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+
 // 환경 변수 설정 로드
 dotenv.config();
 
@@ -65,6 +72,8 @@ app.get('/logout', (req, res) => {
 });
 
 // 라우터 설정
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 app.use('/api/user', userRoutes);           // 사용자 관련 API 라우트
 app.use('/api/transport', transportRoutes); // 대중교통 관련 API 라우트
 app.use('/api/weather', weatherRoutes);     // 날씨 관련 API 라우트

@@ -6,7 +6,6 @@ const getMethodName = async (req, res) => {
   }
 };
 
-
 const postMethodName = async (req, res) => {
   try {
     res.status(200);
