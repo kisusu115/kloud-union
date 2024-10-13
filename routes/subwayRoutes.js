@@ -1,5 +1,5 @@
 const express = require('express');
-const { getStationChoices, getStationTimeTable } = require('../controllers/subwayController');
+const { getStationChoices, getStationTimeTable, getProperTime, getRealTimes } = require('../controllers/subwayController');
 
 const router = express.Router();
 
@@ -173,5 +173,155 @@ router.get('/choices', getStationChoices);
  *                   example: "Server error"
  */
 router.post('/timeTable', getStationTimeTable);
+
+/**
+ * @swagger
+ * /api/subway/properTime:
+ *   post:
+ *     summary: 출발 전 적절한 지하철 시간 조회
+ *     tags: [Subway]
+ *     description: 주어진 역 이름, 노선 번호, 상하행 정보 및 출발 시각을 기준으로 적절한 지하철 시간을 조회합니다.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               stationName:
+ *                 type: string
+ *                 description: 사용자가 선택한 지하철 역 이름
+ *                 example: "건대입구"
+ *               line:
+ *                 type: number
+ *                 description: 사용자가 선택한 지하철 노선 번호
+ *                 example: 2
+ *               upDown:
+ *                 type: number
+ *                 description: 상행선(1) 또는 하행선(2)
+ *                 example: 1
+ *               timeToLeave:
+ *                 type: string
+ *                 description: 사용자가 출발해야 할 시각 (HH:mm:ss 형식)
+ *                 example: "06:25:00"
+ *     responses:
+ *       200:
+ *         description: 출발 시각에 맞는 적절한 지하철 시간 반환
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 nextTime:
+ *                   type: string
+ *                   description: 가장 가까운 지하철 도착 시간
+ *                   example: "06:19:20"
+ *       400:
+ *         description: 요청 파라미터가 잘못되었거나 누락되었습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "stationName, line, upDown, or timeToLeave is required"
+ *       404:
+ *         description: 해당 역의 시간표를 찾을 수 없습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "No timetable found for the given station"
+ *       500:
+ *         description: 서버 오류 발생
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Server error"
+ */
+router.post('/properTime', getProperTime);
+
+/**
+ * @swagger
+ * /api/subway/realTime:
+ *   post:
+ *     summary: 지하철 실시간 도착 정보 조회
+ *     tags: [Subway]
+ *     description: 주어진 역 이름, 노선 번호 및 상하행 정보를 기준으로 지하철의 실시간 도착 정보를 조회합니다.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               stationName:
+ *                 type: string
+ *                 description: 사용자가 선택한 지하철 역 이름
+ *                 example: "건대입구"
+ *               line:
+ *                 type: number
+ *                 description: 사용자가 선택한 지하철 노선 번호
+ *                 example: 2
+ *               upDown:
+ *                 type: number
+ *                 description: 상행선(1) 또는 하행선(2)
+ *                 example: 1
+ *     responses:
+ *       200:
+ *         description: 요청한 지하철의 실시간 도착 정보 반환, 결과 값이 2개면 first/second로, 1개면 first로 응답
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 first:
+ *                   type: number
+ *                   description: 첫 번째 지하철 도착 시간 (초 단위)
+ *                   example: 60
+ *                 second:
+ *                   type: number
+ *                   description: 두 번째 지하철 도착 시간 (초 단위)
+ *                   example: 330
+ *       400:
+ *         description: 요청 파라미터가 잘못되었거나 누락되었습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "stationName, line, or upDown is required"
+ *       404:
+ *         description: 해당 역의 실시간 도착 정보를 찾을 수 없습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "No arrival data found for the given station"
+ *       500:
+ *         description: 서버 오류 발생
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Server error"
+ */
+router.post('/realTime', getRealTimes);
 
 module.exports = router;

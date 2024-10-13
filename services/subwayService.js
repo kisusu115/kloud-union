@@ -1,5 +1,7 @@
 const axios = require('axios');
 const Station = require('../models/stationModel');
+const dotenv = require('dotenv');
+dotenv.config();
 
 // 주어진 stationName에 대해 line 값을 조회
 const getLinesByStationName = async (stationName) => {
@@ -18,11 +20,12 @@ const getLinesByStationName = async (stationName) => {
 const getStationCode = async (stationName, line) => {
     const station = await Station.findOne({ name: stationName, line: line });
     if (!station) throw new Error('Station not found');
-    return station.number; // 역 코드 반환
+    return station.number; // 역 코드 반환 EX) 마들 -> 2714
 };
 
 const getTimeTable = async (stationCode, upDown) => {
-    const url = `http://openAPI.seoul.go.kr:8088/534e51786a6b696b3634414c55584b/json/SearchSTNTimeTableByIDService/1/300/${stationCode}/1/${upDown}`;
+    // 하단 url의 1도 사실 설정 값이고, 평일/토요일/일요일(휴일) 따라 1,2,3으로 조정
+    const url = process.env.TIME_TABLE_API_URL + `/${stationCode}/1/${upDown}`; 
     
     try {
       const response = await axios.get(url);
@@ -46,8 +49,44 @@ const getTimeTable = async (stationCode, upDown) => {
     }
 };
 
+// 실시간 도착 정보를 가져오기
+const getRealTimeArrivals = async (stationName) => {
+  const apiUrl = process.env.REAL_TIME_API_URL + `/${stationName}`;
+  const response = await axios.get(apiUrl);
+  return response.data.realtimeArrivalList; // realtimeArrivalList 반환
+};
+
+
+// 도착 정보에서 first와 second 값 추출
+const extractFirstAndSecondTime = (arrivalList, line, upDown) => {
+  const filteredArrivals = arrivalList
+      .filter(item => {
+          const isLineMatch = parseInt(item.subwayId) - 1000 === line;
+          const isUpDownMatch = (upDown === 1 && (item.updnLine === "상행" || item.updnLine === "내선")) ||
+                                (upDown === 2 && (item.updnLine === "하행" || item.updnLine === "외선"));
+          return isLineMatch && isUpDownMatch;
+      })
+      .map(item => parseInt(item.barvlDt))
+      .sort((a, b) => a - b); // 오름차순 정렬
+  
+  if (filteredArrivals.length === 0) {
+      throw new Error('해당 조건에 맞는 도착 정보가 없습니다.');
+  } else if (filteredArrivals.length === 1) {
+      return { first: filteredArrivals[0] }; // 첫 번째만 반환
+  } else {
+      return { first: filteredArrivals[0], second: filteredArrivals[1] }; // 둘 다 반환
+  }
+};
+
+// getRealTimeArrivals에서 응답 리스트 반환 후 first와 second 시간 추출
+const get2RealTimes = async (stationName, line, upDown) => {
+  const arrivalList = await getRealTimeArrivals(stationName); // 실시간 도착 정보를 가져옴
+  return extractFirstAndSecondTime(arrivalList, line, upDown); // 도착 시간을 처리하여 first와 second 반환
+};
+
 module.exports = {
     getLinesByStationName,
     getStationCode,
-    getTimeTable
+    getTimeTable,
+    get2RealTimes
 };
