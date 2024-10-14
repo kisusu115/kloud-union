@@ -90,6 +90,14 @@ const userSchema = new mongoose.Schema({
     type: Number,
     default: null,
   },
+  latitude: {
+    type: Number,
+    default: null,
+  },
+  longitude: {
+    type: Number,
+    default: null,
+  },
   stationName: {
     type: String,
     default: null,

@@ -75,7 +75,7 @@ app.get('/logout', (req, res) => {
 app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use('/api/user', userRoutes);           // 사용자 관련 API 라우트
-app.use('/api/subway', subwayRoutes); // 대중교통 관련 API 라우트
+app.use('/api/subway', subwayRoutes);       // 대중교통 관련 API 라우트
 app.use('/api/weather', weatherRoutes);     // 날씨 관련 API 라우트
 app.use('/api/todo', todoRoutes);           // TODO 관련 API 라우트
 app.use('/api/alarm', alarmRoutes);         // 알람 관련 API 라우트
