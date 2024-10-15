@@ -13,7 +13,7 @@ const kakaoAuthenticateCallback = async (req, res, next) => {
         }
 
         // 인증 성공 시 콜백 실행
-        res.redirect('/page/welcome');
+        res.redirect('/api/page/main');
     });
 };
 

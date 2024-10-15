@@ -212,7 +212,7 @@ router.post('/timeTable', getStationTimeTable);
  *             schema:
  *               type: object
  *               properties:
- *                 nextTime:
+ *                 properTime:
  *                   type: string
  *                   description: 가장 가까운 지하철 도착 시간
  *                   example: "06:19:20"

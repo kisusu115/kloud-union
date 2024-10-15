@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>마이페이지</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    .profile {
+      text-align: center;
+      margin: 50px 0;
+    }
+    .profile-info {
+      font-size: 24px;
+      display: flex;
+      justify-content: center;
+      flex-wrap: wrap;
+      gap: 20px;
+      width: 50%; /* 화면 너비의 50%로 설정 */
+      margin: 0 auto; /* 중앙에 배치 */
+    }
+    .info-item {
+      flex: 1; /* 모든 info-item을 동일 너비로 설정 */
+      min-width: 200px; /* 최소 너비 설정 */
+      margin: 10px 0;
+    }
+    .input-group {
+      margin: 20px 0;
+    }
+    .input-group input {
+      padding: 10px;
+      font-size: 16px;
+      width: 200px;
+    }
+    .update-button {
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #008CBA;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+    .update-button:hover {
+      background-color: #007B9E;
+    }
+    .redirect-button {
+      display: block;
+      margin: 20px auto;
+      padding: 10px 20px;
+      font-size: 18px;
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      text-decoration: none;
+    }
+    .redirect-button:hover {
+      background-color: #45a049;
+    }
+  </style>
+</head>
+<body>
+  <div class="profile">
+    <h1>안녕하세요, <%= user.nickname %>님!</h1>
+    <div class="profile-info">
+      <!-- 첫 번째 줄: 나이, 성별, 키 -->
+      <div class="info-item">나이: <%= user.age %>세</div>
+      <div class="info-item">성별: <%= user.gender === 'Male' ? '남' : user.gender === 'Female' ? '여' : '' %></div>
+      <div class="info-item">키: <%= user.height %>cm</div>
+    </div>
+    
+    <div class="profile-info">
+      <!-- 두 번째 줄: 출발역, 선호 라인, 상/하행 -->
+      <div class="info-item">출발역: <%= user.stationName %></div>
+      <div class="info-item">노선: <%= user.line %>호선</div>
+      <div class="info-item">상/하행 여부: <%= user.upDown === '1' ? '상행' : '하행' %></div>
+    </div>
+    
+    <div class="profile-info">
+      <!-- 세 번째 줄: 출발 시각, 위도, 경도 -->
+      <div class="info-item">역 출발 시각: <%= user.timeToLeave %></div>
+      <div class="info-item">위도: <%= user.latitude %></div>
+      <div class="info-item">경도: <%= user.longitude %></div>
+    </div>
+
+    <!-- 수정 input 필드들 -->
+    <div class="input-group">
+      <input type="number" id="age" placeholder="나이" />
+      <input type="text" id="gender" placeholder="성별 (Male/Female)" />
+      <input type="number" id="height" placeholder="키 (cm)" />
+      <button class="update-button" onclick="updateProfile()">수정</button>
+    </div>
+
+    <div class="input-group">
+      <input type="text" id="stationName" placeholder="출발역" />
+      <input type="number" id="line" placeholder="N호선" />
+      <input type="number" id="upDown" placeholder="상행:1 | 하행:2" />
+      <button class="update-button" onclick="updateStation()">수정</button>
+    </div>
+
+    <div class="input-group">
+      <input type="text" id="timeToLeave" placeholder="출발 시각 (hh:mm:ss)" />
+      <button class="update-button" onclick="updateTimeToLeave()">수정</button>
+    </div>
+
+    <div class="input-group">
+      <input type="number" id="latitude" placeholder="위도" step="0.000001" />
+      <input type="number" id="longitude" placeholder="경도" step="0.000001" />
+      <button class="update-button" onclick="updateCoordinate()">수정</button>
+    </div>
+
+    <a href="/api/page/main" class="redirect-button">메인페이지로 이동</a>
+  </div>
+
+  <script>
+    function updateProfile() {
+      const age = document.getElementById('age').value;
+      const gender = document.getElementById('gender').value;
+      const height = document.getElementById('height').value;
+
+      fetch('/api/user/profile', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ age, gender, height }),
+      }).then(() => {
+        location.reload();
+      });
+    }
+
+    function updateStation() {
+      const stationName = document.getElementById('stationName').value;
+      const line = document.getElementById('line').value;
+      const upDown = document.getElementById('upDown').value;
+
+      fetch('/api/user/station', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ stationName, line, upDown }),
+      }).then(() => {
+        location.reload();
+      });
+    }
+
+    function updateTimeToLeave() {
+      const timeToLeave = document.getElementById('timeToLeave').value;
+
+      fetch('/api/user/timeToLeave', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ timeToLeave }),
+      }).then(() => {
+        location.reload();
+      });
+    }
+
+    function updateCoordinate() {
+      const latitude = document.getElementById('latitude').value;
+      const longitude = document.getElementById('longitude').value;
+      
+      fetch('/api/user/coordinate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ latitude, longitude }),
+      }).then(() => {
+        location.reload();
+      });
+    }
+  </script>
+</body>
+</html>
