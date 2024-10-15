@@ -42,6 +42,14 @@ const mongoose = require('mongoose');
  *            type: number
  *            description: 사용자가 사용하는 호선 번호
  *            example: 2
+ *          upDown:
+ *            type: number
+ *            description: 사용자 이용 노선 상/하행 정보
+ *            example: 1
+ *          timeToLeave:
+ *            type: number
+ *            description: 사용자가 해당 역에서 열차에 탑승해야 할 최소 시각, "hh:mm:ss" 형식
+ *            example: '06:25:00'
  *          createdAt:
  *            type: string
  *            format: date-time
@@ -111,6 +119,10 @@ const userSchema = new mongoose.Schema({
     enum: [1, 2],
     default: null,
   },
+  timeToLeave: {
+    type: String,
+    default: null,
+  }
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
