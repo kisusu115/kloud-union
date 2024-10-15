@@ -4,7 +4,27 @@ const { findUserBySnsId } = require('../services/userService');
 
 const router = express.Router();
 
-// 메인 페이지 라우트
+/**
+ * @swagger
+ * /api/page/main:
+ *   get:
+ *     summary: 메인 페이지 렌더링
+ *     description: 인증된 사용자 정보를 기반으로 메인 페이지를 렌더링합니다.
+ *     tags: [Page]
+ *     responses:
+ *       200:
+ *         description: 메인 페이지가 성공적으로 렌더링되었습니다.
+ *       500:
+ *         description: 서버 오류가 발생했습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: 서버 오류가 발생했습니다.
+ */
 router.get('/main', authenticateSession, async (req, res) => {
     try {
         const user = await getUserProfile(req, res); // getUserProfile 호출하여 사용자 정보 가져오기
@@ -15,7 +35,27 @@ router.get('/main', authenticateSession, async (req, res) => {
     }
 });
 
-// 마이페이지 라우트
+/**
+ * @swagger
+ * /api/page/my:
+ *   get:
+ *     summary: 마이페이지 렌더링
+ *     description: 인증된 사용자 정보를 기반으로 마이페이지를 렌더링합니다.
+ *     tags: [Page]
+ *     responses:
+ *       200:
+ *         description: 마이페이지가 성공적으로 렌더링되었습니다.
+ *       500:
+ *         description: 서버 오류가 발생했습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: 서버 오류가 발생했습니다.
+ */
 router.get('/my', authenticateSession, async (req, res) => {
     try {
         const user = await getUserProfile(req, res); // getUserProfile 호출하여 사용자 정보 가져오기
