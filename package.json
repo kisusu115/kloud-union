@@ -14,6 +14,7 @@
     "axios": "^1.7.7",
     "csv-parser": "^3.0.0",
     "dotenv": "^16.4.5",
+    "ejs": "^3.1.10",
     "express": "^4.21.0",
     "express-session": "^1.18.1",
     "fs": "^0.0.1-security",
