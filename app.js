@@ -6,6 +6,7 @@ const path = require('path');
 const userRoutes = require('./routes/userRoutes');
 const subwayRoutes = require('./routes/subwayRoutes');
 const pageRoutes = require('./routes/pageRoutes');
+const distanceRoutes = require('./routes/distanceRoutes');
 const weatherRoutes = require('./routes/weatherRoutes');
 const todoRoutes = require('./routes/todoRoutes');
 const alarmRoutes = require('./routes/alarmRoutes');
@@ -80,6 +81,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 app.use('/api/user', userRoutes);           // 사용자 관련 API 라우트
 app.use('/api/subway', subwayRoutes);       // 대중교통 관련 API 라우트
 app.use('/api/page', pageRoutes);           // 동적 페이지 반환 API 라우트
+app.use('/api/distance', distanceRoutes);           // 동적 페이지 반환 API 라우트
 app.use('/api/weather', weatherRoutes);     // 날씨 관련 API 라우트
 app.use('/api/todo', todoRoutes);           // TODO 관련 API 라우트
 app.use('/api/alarm', alarmRoutes);         // 알람 관련 API 라우트
