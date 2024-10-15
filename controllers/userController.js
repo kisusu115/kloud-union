@@ -83,6 +83,28 @@ const updateUserStation = async (req, res) => {
   }
 }
 
+const updateUserTimeToLeave = async (req, res) => {
+  const snsId = req.user ? req.user.snsId : null; // req.user가 정의되어 있는지 확인
+
+  if (!snsId) {
+      return res.status(400).json({ error: 'session\'s snsId is required' });
+  }
+  
+  const { timeToLeave } = req.body;
+
+  try {
+    const user = await updateUserBySnsId(snsId, { timeToLeave });
+
+    if (!user) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    res.status(200).json(user);
+  } catch (error) {
+    res.status(500).json({ error: 'Server error' });
+  }
+}
+
 const updateUserCoordinate = async (req, res) => {
   const snsId = req.user ? req.user.snsId : null; // req.user가 정의되어 있는지 확인
 
@@ -110,6 +132,7 @@ module.exports = {
   getUserProfile,
   updateUserProfile,
   updateUserStation,
+  updateUserTimeToLeave,
   updateUserCoordinate,
   redirectToKakao,
 };
