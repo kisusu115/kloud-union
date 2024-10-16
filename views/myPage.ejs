@@ -124,7 +124,11 @@
     <div class="input-group">
       <input type="text" id="stationName" placeholder="출발역" />
       <input type="number" id="line" placeholder="N호선" />
-      <input type="number" id="upDown" placeholder="상행:1 | 하행:2" />
+      <select id="upDown">
+        <option value="" disabled selected>상행: 1 | 하행: 2</option>
+        <option value="1">상행</option>
+        <option value="2">하행</option>
+      </select>
       <button class="update-button" onclick="updateStation()">수정</button>
     </div>
 
