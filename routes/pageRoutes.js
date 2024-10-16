@@ -1,8 +1,34 @@
 const express = require('express');
+const path = require('path');
 const { authenticateSession } = require('../middlewares/authMiddleware');
 const { findUserBySnsId } = require('../services/userService');
 
 const router = express.Router();
+
+/**
+ * @swagger
+ * /api/page/login:
+ *   get:
+ *     summary: 로그인 페이지 반환
+ *     description: 로그인 페이지를 클라이언트에게 반환합니다.
+ *     tags: [Page]
+ *     responses:
+ *       200:
+ *         description: 로그인 페이지가 성공적으로 반환되었습니다.
+ *       500:
+ *         description: 서버 오류가 발생했습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: 서버 오류가 발생했습니다.
+ */
+router.get('/login', (req, res) => {
+    res.sendFile(path.join(__dirname, '../public', 'loginPage.html'));
+});
 
 /**
  * @swagger

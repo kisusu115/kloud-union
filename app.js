@@ -53,26 +53,7 @@ app.set('views', path.join(__dirname, 'views')); // views 폴더 경로 설정
 
 // 테스트용 임시 API
 app.get('/', (req, res) => {
-  res.status(302).redirect('/page/login');
-});
-
-app.get('/page/login', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'loginPage.html'));
-});
-
-app.get('/logout', (req, res) => {
-  req.logout((err) => {
-      if (err) {
-          return next(err);
-      }
-      req.session.destroy((err) => {
-          if (err) {
-              return next(err);
-          }
-          res.clearCookie('connect.sid'); // 쿠키 삭제
-          res.redirect('/'); // 로그인 페이지로 리다이렉트
-      });
-  });
+  res.status(302).redirect('/api/page/login');
 });
 
 // 라우터 설정
