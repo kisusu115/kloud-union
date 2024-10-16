@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,32 +9,42 @@
     body {
       font-family: Arial, sans-serif;
     }
+
     .profile {
       text-align: center;
       margin: 50px 0;
     }
+
     .profile-info {
       font-size: 24px;
       display: flex;
       justify-content: center;
       flex-wrap: wrap;
       gap: 20px;
-      width: 50%; /* 화면 너비의 50%로 설정 */
-      margin: 0 auto; /* 중앙에 배치 */
+      width: 50%;
+      /* 화면 너비의 50%로 설정 */
+      margin: 0 auto;
+      /* 중앙에 배치 */
     }
+
     .info-item {
-      flex: 1; /* 모든 info-item을 동일 너비로 설정 */
-      min-width: 200px; /* 최소 너비 설정 */
+      flex: 1;
+      /* 모든 info-item을 동일 너비로 설정 */
+      min-width: 200px;
+      /* 최소 너비 설정 */
       margin: 10px 0;
     }
+
     .input-group {
       margin: 20px 0;
     }
+
     .input-group input {
       padding: 10px;
       font-size: 16px;
       width: 200px;
     }
+
     .update-button {
       padding: 10px 20px;
       font-size: 18px;
@@ -43,9 +54,11 @@
       border-radius: 5px;
       cursor: pointer;
     }
+
     .update-button:hover {
       background-color: #007B9E;
     }
+
     .redirect-button {
       display: block;
       margin: 20px auto;
@@ -58,33 +71,41 @@
       cursor: pointer;
       text-decoration: none;
     }
+
     .redirect-button:hover {
       background-color: #45a049;
     }
   </style>
 </head>
+
 <body>
   <div class="profile">
     <h1>안녕하세요, <%= user.nickname %>님!</h1>
     <div class="profile-info">
       <!-- 첫 번째 줄: 나이, 성별, 키 -->
       <div class="info-item">나이: <%= user.age %>세</div>
-      <div class="info-item">성별: <%= user.gender === 'Male' ? '남' : user.gender === 'Female' ? '여' : '' %></div>
+      <div class="info-item">성별: <%= user.gender==='Male' ? '남' : user.gender==='Female' ? '여' : '' %>
+      </div>
       <div class="info-item">키: <%= user.height %>cm</div>
     </div>
-    
+
     <div class="profile-info">
       <!-- 두 번째 줄: 출발역, 선호 라인, 상/하행 -->
-      <div class="info-item">출발역: <%= user.stationName %></div>
+      <div class="info-item">출발역: <%= user.stationName %>
+      </div>
       <div class="info-item">노선: <%= user.line %>호선</div>
-      <div class="info-item">상/하행 여부: <%= user.upDown === '1' ? '상행' : '하행' %></div>
+      <div class="info-item">상/하행 여부: <%= user.upDown==='1' ? '상행' : '하행' %>
+      </div>
     </div>
-    
+
     <div class="profile-info">
       <!-- 세 번째 줄: 출발 시각, 위도, 경도 -->
-      <div class="info-item">역 출발 시각: <%= user.timeToLeave %></div>
-      <div class="info-item">위도: <%= user.latitude %></div>
-      <div class="info-item">경도: <%= user.longitude %></div>
+      <div class="info-item">역 출발 시각: <%= user.timeToLeave %>
+      </div>
+      <div class="info-item">위도: <%= user.latitude %>
+      </div>
+      <div class="info-item">경도: <%= user.longitude %>
+      </div>
     </div>
 
     <!-- 수정 input 필드들 -->
@@ -111,6 +132,7 @@
       <input type="number" id="latitude" placeholder="위도" step="0.000001" />
       <input type="number" id="longitude" placeholder="경도" step="0.000001" />
       <button class="update-button" onclick="updateCoordinate()">수정</button>
+      <button class="update-button" onclick="geoLocationCoord()">현재위치 가져오기</button>
     </div>
 
     <a href="/api/page/main" class="redirect-button">메인페이지로 이동</a>
@@ -166,7 +188,7 @@
     function updateCoordinate() {
       const latitude = document.getElementById('latitude').value;
       const longitude = document.getElementById('longitude').value;
-      
+
       fetch('/api/user/coordinate', {
         method: 'POST',
         headers: {
@@ -177,6 +199,27 @@
         location.reload();
       });
     }
+
+    function geoLocationCoord() {
+      if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(successCallback, errorCallback);
+      } else {
+        console.log("Geolocation을 지원하지 않는 브라우저입니다.");
+      }
+
+      function successCallback(position) {
+        const latitude = position.coords.latitude;
+        const longitude = position.coords.longitude;
+        document.getElementById('latitude').value = latitude;
+        document.getElementById('longitude').value = longitude;
+        console.log("위도: " + latitude + ", 경도: " + longitude);
+      }
+
+      function errorCallback(error) {
+        console.error("오류 발생: " + error.message);
+      }
+    }
   </script>
 </body>
+
 </html>
