@@ -27,7 +27,7 @@ const router = express.Router();
  *                   example: 서버 오류가 발생했습니다.
  */
 router.get('/login', (req, res) => {
-    res.sendFile(path.join(__dirname, '../public', 'loginPage.html'));
+    res.sendFile('loginPage.html', { root: 'public' });
 });
 
 /**
