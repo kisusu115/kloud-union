@@ -63,4 +63,17 @@ const uploadCSV = (filePath) => {
 };
 
 // Call the function with the CSV file path
-uploadCSV("C:/projects/CWS/station.csv");
+try {
+  if (!process.env.S3_STATION_CSV) {
+    throw new Error('S3_STATION_CSV 환경 변수가 정의되지 않았습니다. .env 파일을 확인해 주세요.');
+  }
+  
+  // 환경 변수에서 가져온 S3 저장소 경로로 파일을 처리
+  uploadCSV(process.env.S3_STATION_CSV);
+
+} catch (error) {
+  console.error('환경 변수에서 파일 경로를 가져오지 못했습니다. 로컬 파일을 사용합니다.', error.message);
+
+  // 오류 발생 시 로컬 파일로 대체
+  uploadCSV('./station.csv');
+}
