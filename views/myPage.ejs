@@ -39,7 +39,8 @@
       margin: 20px 0;
     }
 
-    .input-group input {
+    .input-group input,
+    select {
       padding: 10px;
       font-size: 16px;
       width: 200px;
@@ -111,7 +112,11 @@
     <!-- 수정 input 필드들 -->
     <div class="input-group">
       <input type="number" id="age" placeholder="나이" />
-      <input type="text" id="gender" placeholder="성별 (Male/Female)" />
+      <select id="gender">
+        <option value="" disabled selected>성별을 선택하세요</option>
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+      </select>
       <input type="number" id="height" placeholder="키 (cm)" />
       <button class="update-button" onclick="updateProfile()">수정</button>
     </div>
