@@ -95,7 +95,7 @@
       <div class="info-item">출발역: <%= user.stationName %>
       </div>
       <div class="info-item">노선: <%= user.line %>호선</div>
-      <div class="info-item">상/하행 여부: <%= user.upDown==='1' ? '상행' : '하행' %>
+      <div class="info-item">상/하행 여부: <%= user.upDown=='1' ? '상행' : '하행' %>
       </div>
     </div>
 
@@ -125,9 +125,8 @@
       <input type="text" id="stationName" placeholder="출발역" />
       <input type="number" id="line" placeholder="N호선" />
       <select id="upDown">
-        <option value="" disabled selected>상행: 1 | 하행: 2</option>
-        <option value="1">상행</option>
-        <option value="2">하행</option>
+        <option value="1" selected>상행: 1</option>
+        <option value="2">하행: 2</option>
       </select>
       <button class="update-button" onclick="updateStation()">수정</button>
     </div>
