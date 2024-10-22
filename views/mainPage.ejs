@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="ko">
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,54 +9,85 @@
     body {
       font-family: Arial, sans-serif;
     }
+
     .time-container {
       text-align: center;
       margin: 50px 0;
     }
+
     .big-time {
       font-size: 48px;
       font-weight: bold;
     }
+
     .station-name {
       font-size: 48px;
       font-weight: bold;
       margin-bottom: 10px;
     }
+
     .bold-time {
       font-weight: bold;
     }
+
     .train-info {
       margin-top: 20px;
       font-size: 24px;
     }
+
     .redirect-button {
       display: block;
       margin: 20px auto;
       padding: 10px 20px;
       font-size: 18px;
-      background-color: #4CAF50; /* 초록색 배경 */
-      color: white; /* 흰색 글씨 */
+      background-color: #4CAF50;
+      /* 초록색 배경 */
+      color: white;
+      /* 흰색 글씨 */
       border: none;
-      border-radius: 5px; /* 모서리 둥글게 */
-      cursor: pointer; /* 손가락 커서 */
-      text-decoration: none; /* 밑줄 제거 */
+      border-radius: 5px;
+      /* 모서리 둥글게 */
+      cursor: pointer;
+      /* 손가락 커서 */
+      text-decoration: none;
+      /* 밑줄 제거 */
     }
+
     .redirect-button:hover {
-      background-color: #45a049; /* 호버 시 조금 어두운 초록색 */
+      background-color: #45a049;
+      /* 호버 시 조금 어두운 초록색 */
     }
   </style>
 </head>
+
 <body>
   <div class="time-container">
-    <p class="station-name"><%= user.stationName %>역</p>
+    <p class="station-name">
+      <%= user.stationName %>역
+    </p>
+
     <p>현재 시각: <span id="currentTime" class="bold-time">...</span></p>
-    <p>적정 열차 도착 예정 시각: <div class="big-time" id="properTime">...</div></p>
-    
+
+    <p>
+      <span>해당 역까지 도보 도착 예상 시간 : </span>
+      <span id="walkTime">Loading...</span>
+    </p>
+    <p>
+      <span>해당 역까지 도보 도착 예상 거리 : </span>
+      <span id="walkDistance">Loading...</span>
+    </p>
+
+    <p>
+      <span class="bold-time">적정 열차 도착 예정 시각:</span>
+      <span class="big-time" id="properTime">Loading...
+      </span>
+    </p>
+
     <div class="train-info">
-      <p>첫 번째 열차 도착 예정 시간: <span id="firstTrain">...</span></p>
-      <p>두 번째 열차 도착 예정 시간: <span id="secondTrain">...</span></p>
+      <p>첫 번째 열차 도착 예정 시간: <span id="firstTrain">Loading...</span></p>
+      <p>두 번째 열차 도착 예정 시간: <span id="secondTrain">Loading...</span></p>
     </div>
-    
+
     <a href="/api/page/my" class="redirect-button">마이페이지로 이동</a>
   </div>
 
@@ -68,7 +100,7 @@
     }
     // 1초마다 현재 시각 갱신
     setInterval(updateCurrentTime, 1000);
-    
+
     // 적절한 출발 시간 받아오기
     fetch('/api/subway/properTime', {
       method: 'POST',
@@ -80,19 +112,19 @@
         timeToLeave: '<%= user.timeToLeave %>'
       })
     })
-    .then(response => {
-      if (!response.ok) {
-        throw new Error('네트워크 응답이 좋지 않습니다: ' + response.status);
-      }
-      return response.json();
-    })
-    .then(data => {
-      document.getElementById('properTime').innerText = data.properTime || '정보 없음';
-    })
-    .catch(error => {
-      console.error('Error fetching proper time:', error);
-      document.getElementById('properTime').innerText = '오류 발생';
-    });
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('네트워크 응답이 좋지 않습니다: ' + response.status);
+        }
+        return response.json();
+      })
+      .then(data => {
+        document.getElementById('properTime').innerText = data.properTime || '정보 없음';
+      })
+      .catch(error => {
+        console.error('Error fetching proper time:', error);
+        document.getElementById('properTime').innerText = '오류 발생';
+      });
 
     // 실시간 도착 시간 받아오기
     fetch('/api/subway/realTime', {
@@ -104,21 +136,126 @@
         upDown: Number('<%= user.upDown %>')
       })
     })
-    .then(response => {
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('네트워크 응답이 좋지 않습니다: ' + response.status);
+        }
+        return response.json();
+      })
+      .then(data => {
+        document.getElementById('firstTrain').innerText = convertSeconds(data.first) + " 후" || '정보 없음';
+        document.getElementById('secondTrain').innerText = convertSeconds(data.second) + " 후" || '정보 없음';
+      })
+      .catch(error => {
+        console.error('Error fetching real-time data:', error);
+        document.getElementById('firstTrain').innerText = '오류 발생';
+        document.getElementById('secondTrain').innerText = '오류 발생';
+      });
+
+    //지하철 좌표 받아오기
+    fetch('/api/subway/coordinate', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        stationName: '<%= user.stationName %>',  // EJS 표현식 사용 (문자열)
+        line: Number('<%= user.line %>'),        // EJS 표현식 사용 (숫자)
+      })
+    }).then(response => {
       if (!response.ok) {
         throw new Error('네트워크 응답이 좋지 않습니다: ' + response.status);
       }
       return response.json();
     })
-    .then(data => {
-      document.getElementById('firstTrain').innerText = data.first+"초 후" || '정보 없음';
-      document.getElementById('secondTrain').innerText = data.second+"초 후" || '정보 없음';
-    })
-    .catch(error => {
-      console.error('Error fetching real-time data:', error);
-      document.getElementById('firstTrain').innerText = '오류 발생';
-      document.getElementById('secondTrain').innerText = '오류 발생';
-    });
+      .then(data => {
+        // 좌표 정보가 있을 경우 도보 거리 계산 api 호출
+
+        fetchUserProfile().then(coord => {
+          fetch('/api/distance/meter', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              startLongitude: coord.longitude,
+              startLatitude: coord.latitude,
+              endLongitude: data.longitude,
+              endLatitude: data.latitude
+            })
+          }).then(response => {
+            if (!response.ok) {
+              throw new Error('네트워크 응답이 좋지 않습니다: ' + response.status);
+            }
+            return response.json();
+          }).then(({ distance }) => {
+            document.getElementById('walkDistance').innerText = `${formatDistance(distance)}`
+          })
+        })
+
+        fetchUserProfile().then(coord => {
+          fetch('/api/distance/seconds', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              startLongitude: coord.longitude,
+              startLatitude: coord.latitude,
+              endLongitude: data.longitude,
+              endLatitude: data.latitude,
+              speed: 30
+            })
+          }).then(response => {
+            if (!response.ok) {
+              throw new Error('네트워크 응답이 좋지 않습니다: ' + response.status);
+            }
+            return response.json();
+          }).then(({ moveTime }) => { document.getElementById('walkTime').innerText = `${convertSeconds(moveTime)}` })
+        })
+
+      })
+      .catch(error => {
+        console.error('좌표 정보를 가져오는 중 오류 발생:', error);
+      });
+
+    async function fetchUserProfile() {
+      const response = await fetch('/api/user/profile');
+      const userProfile = await response.json();
+      const { latitude, longitude } = userProfile;
+
+      return { latitude, longitude };
+    }
+
+    function convertSeconds(seconds) {
+      const hours = Math.floor(seconds / 3600); // 1시간 = 3600초
+      const minutes = Math.floor((seconds % 3600) / 60); // 나머지를 분으로 변환
+      const remainingSeconds = seconds % 60; // 남은 초
+
+      let result = '';
+
+      if (hours > 0) {
+        result += `${hours}시간 `;
+      }
+
+      if (minutes > 0 || hours > 0) { // 시간 또는 분이 0이 아닐 때만 분 출력
+        result += `${minutes}분 `;
+      }
+
+      result += `${remainingSeconds}초`; // 항상 초는 출력
+
+      return result.trim(); // 앞뒤 공백 제거
+    }
+
+    function formatDistance(meters) {
+      // km로 변환
+      const kilometers = meters / 1000;
+
+      // km 단위로 출력
+      if (kilometers >= 2) {
+        return `${kilometers.toFixed(3)}km`; // 소수점 3자리까지 표시
+      }
+
+      // 3자리마다 쉼표 추가
+      const formattedMeters = meters.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
+      return `${meters}m`;
+    }
   </script>
 </body>
+
 </html>
