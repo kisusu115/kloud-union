@@ -8,12 +8,20 @@ function convertSeconds(seconds) {
   if (hours > 0) {
     result += `${hours}시간 `;
   }
-  
+
   if (minutes > 0 || hours > 0) { // 시간 또는 분이 0이 아닐 때만 분 출력
     result += `${minutes}분 `;
   }
 
-  result += `${remainingSeconds}초`; // 항상 초는 출력
+  // 시간과 분이 모두 없을 때는 0초 출력
+  if (result === '' && remainingSeconds === 0) {
+    return '0초';
+  }
+
+  // 0초가 아닐 경우에만 초 출력
+  if (remainingSeconds > 0) {
+    result += `${remainingSeconds}초`;
+  }
 
   return result.trim(); // 앞뒤 공백 제거
 }
