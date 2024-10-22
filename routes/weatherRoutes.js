@@ -1,12 +1,8 @@
 const express = require('express');
-const { getMethodName, postMethodName } = require('../controllers/emptyController');
+const { getHourlyPrecipitation } = require('../controllers/weatherController');
 
 const router = express.Router();
 
-// GET 요청
-router.get('/', postMethodName);
-
-// POST 요청
-router.post('/', getMethodName);
+router.get('/info', getHourlyPrecipitation);
 
 module.exports = router;

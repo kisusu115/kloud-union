@@ -46,6 +46,7 @@ const getStationTimeTable = async (req, res) => {
     }
 };
 
+// 시간표 리스트에서 클라이언트가 지정한 시각 직전의 시각 찾아서 반환
 const getProperTime = async (req, res) => {
     const { stationName, line, upDown, timeToLeave } = req.body;
   
