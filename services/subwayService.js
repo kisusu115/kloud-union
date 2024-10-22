@@ -84,9 +84,30 @@ const get2RealTimes = async (stationName, line, upDown) => {
   return extractFirstAndSecondTime(arrivalList, line, upDown); // 도착 시간을 처리하여 first와 second 반환
 };
 
+// 지하철 역 이름과 노선 번호로 좌표를 조회하는 서비스 함수
+const getStationCoordinates = async (stationName, line) => {
+  try {
+      const station = await Station.findOne({ name: stationName, line });
+
+      if (!station) {
+          return null; // 역을 찾지 못하면 null 반환
+      }
+
+      // 위도와 경도를 반환
+      return {
+          latitude: station.latitude,
+          longitude: station.longitude,
+      };
+  } catch (error) {
+      throw new Error('Error fetching station coordinates');
+  }
+};
+
+
 module.exports = {
     getLinesByStationName,
     getStationCode,
     getTimeTable,
-    get2RealTimes
+    get2RealTimes,
+    getStationCoordinates
 };
