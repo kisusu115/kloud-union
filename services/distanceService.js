@@ -53,7 +53,7 @@ const getMoveSeconds = async (startX, startY, endX, endY, speed) => {
         endX: endX,
         endY: endY,
         angle: 20,
-        speed: speed,
+        speed: 30,
         endPoiId: "10001",
         reqCoordType: "WGS84GEO",
         startName: "home",
@@ -73,7 +73,8 @@ const getMoveSeconds = async (startX, startY, endX, endY, speed) => {
 
         // 응답 처리
         const { data } = response;
-        const totalSeconds = data.features[0].properties.totalTime;
+        let totalSeconds = data.features[0].properties.totalTime;
+        if (speed > 0) totalSeconds = Math.floor(totalSeconds * 30 / speed);
 
         // 필요한 데이터 반환
         return totalSeconds;
