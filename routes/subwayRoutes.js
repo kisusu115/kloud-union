@@ -1,5 +1,5 @@
 const express = require('express');
-const { getStationChoices, getStationTimeTable, getProperTime, getRealTimes } = require('../controllers/subwayController');
+const { getStationChoices, getStationTimeTable, getProperTime, getRealTimes, getCoordinate } = require('../controllers/subwayController');
 
 const router = express.Router();
 
@@ -323,5 +323,76 @@ router.post('/properTime', getProperTime);
  *                   example: "Server error"
  */
 router.post('/realTime', getRealTimes);
+
+/**
+ * @swagger
+ * /api/subway/coordinate:
+ *   post:
+ *     summary: 특정 역의 좌표 정보 조회
+ *     tags: [Subway]
+ *     description: 주어진 역 이름과 노선 번호를 기반으로 해당 역의 좌표(위도, 경도)를 조회합니다.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               stationName:
+ *                 type: string
+ *                 description: 조회할 지하철 역 이름
+ *                 example: "건대입구"
+ *               line:
+ *                 type: number
+ *                 description: 조회할 지하철 노선 번호
+ *                 example: 2
+ *     responses:
+ *       200:
+ *         description: 해당 역의 좌표 반환
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 latitude:
+ *                   type: number
+ *                   description: 지하철 역의 위도
+ *                   example: 37.540705
+ *                 longitude:
+ *                   type: number
+ *                   description: 지하철 역의 경도
+ *                   example: 127.07047
+ *       400:
+ *         description: 역 이름이나 노선 번호가 누락되었거나 잘못되었습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "stationName and line are required"
+ *       404:
+ *         description: 해당 역을 찾을 수 없습니다.
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Station not found"
+ *       500:
+ *         description: 서버 오류 발생
+ *         content:
+ *           application/json:
+ *             schema:
+ *               type: object
+ *               properties:
+ *                 error:
+ *                   type: string
+ *                   example: "Server error"
+ */
+router.post('/coordinate', getCoordinate);
 
 module.exports = router;
