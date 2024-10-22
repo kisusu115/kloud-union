@@ -1,4 +1,4 @@
-const { getLinesByStationName, getStationCode, getTimeTable, get2RealTimes } = require('../services/subwayService');
+const { getLinesByStationName, getStationCode, getTimeTable, get2RealTimes, getStationCoordinates } = require('../services/subwayService');
 
 // 지하철 역 선택 조회
 const getStationChoices = async (req, res) => {
@@ -89,10 +89,32 @@ const getRealTimes = async (req, res) => {
     }
 };
 
+const getCoordinate = async (req, res) => {
+    const { stationName, line } = req.body;
+
+    if (!stationName || !line) {
+        return res.status(400).json({ error: 'stationName and line are required' });
+    }
+
+    try {
+        const coordinates = await getStationCoordinates(stationName, line);
+
+        if (!coordinates) {
+            return res.status(404).json({ error: 'Station not found' });
+        }
+        res.status(200).json(coordinates);
+        
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Server error' });
+    }
+}
+
 
 module.exports = {
     getStationChoices,
     getStationTimeTable,
     getProperTime,
     getRealTimes,
+    getCoordinate,
 };
