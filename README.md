@@ -15,7 +15,7 @@ MongoDB URI, 세션 비밀키, 카카오 API 정보 등 설정
 
 ```bash
 npm init -y
-npm install express express-session mongoose dotenv passport passport-kakao swagger-cli swagger-jsdoc swagger-ui-express axios csv-parser ejs
+npm install express express-session mongoose dotenv passport passport-kakao swagger-cli swagger-jsdoc swagger-ui-express axios csv-parser ejs jsonwebtoken jwks-rsa querystring
 ```
 
 # 프로젝트 설명
