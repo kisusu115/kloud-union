@@ -9,7 +9,7 @@ const router = express.Router();
  * @swagger
  * /api/page/login:
  *   get:
- *     summary: 로그인 페이지 반환
+ *     summary: 로그인 페이지 반환 - 기존 동적페이지 반환 로직
  *     description: 로그인 페이지를 클라이언트에게 반환합니다.
  *     tags: [Page]
  *     responses:
@@ -34,7 +34,7 @@ router.get('/login', (req, res) => {
  * @swagger
  * /api/page/main:
  *   get:
- *     summary: 메인 페이지 렌더링
+ *     summary: 메인 페이지 렌더링 - 기존 동적페이지 반환 로직
  *     description: 인증된 사용자 정보를 기반으로 메인 페이지를 렌더링합니다.
  *     tags: [Page]
  *     responses:
@@ -65,7 +65,7 @@ router.get('/main', authenticateSession, async (req, res) => {
  * @swagger
  * /api/page/my:
  *   get:
- *     summary: 마이페이지 렌더링
+ *     summary: 마이페이지 렌더링 - 기존 동적페이지 반환 로직
  *     description: 인증된 사용자 정보를 기반으로 마이페이지를 렌더링합니다.
  *     tags: [Page]
  *     responses:

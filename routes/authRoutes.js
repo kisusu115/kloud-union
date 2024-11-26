@@ -14,7 +14,7 @@ const router = express.Router();
  * @swagger
  * /auth/kakao:
  *   get:
- *     summary: 카카오 인증 페이지로 리다이렉트
+ *     summary: 카카오 인증 페이지로 리다이렉트 - 기존로직
  *     tags: [Auth]
  *     description: 사용자가 카카오 로그인 페이지로 리다이렉트됩니다.
  *     responses:
@@ -29,7 +29,7 @@ router.get('/kakao', kakaoAuthenticate);
  * @swagger
  * /auth/kakao/callback:
  *   get:
- *     summary: 카카오 로그인 인증 콜백
+ *     summary: 카카오 로그인 인증 콜백 - 기존로직
  *     tags: [Auth]
  *     description: 카카오 로그인이 성공하면 카카오가 이 URL로 리다이렉트합니다. 실패하면 `/`로 리다이렉트됩니다.
  *     responses:

@@ -7,14 +7,10 @@ const mongoose = require('mongoose');
  *      User:
  *        type: object
  *        properties:
- *          snsId:
+ *          username:
  *            type: string
- *            description: kakao 발급 id
- *            example: '3745557996'
- *          nickname:
- *            type: string
- *            description: kakao username
- *            example: '홍길동'
+ *            description: cognito 설정 id
+ *            example: 'usernameExample'
  *          weight:
  *            type: number
  *            description: 거리 계산 가중치값
@@ -71,14 +67,10 @@ const mongoose = require('mongoose');
  */
 
 const userSchema = new mongoose.Schema({
-  snsId: {
+  username: {
     type: String,
     required: true,
     unique: true,
-  },
-  nickname: {
-    type: String,
-    required: true,
   },
   weight: {
     type: Number,

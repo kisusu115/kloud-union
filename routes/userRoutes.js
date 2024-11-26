@@ -1,6 +1,6 @@
 const express = require('express');
-const { getUsers, getUserProfile, updateUserProfile, updateUserStation, updateUserTimeToLeave, updateUserCoordinate, redirectToKakao } = require('../controllers/userController');
-const { authenticateSession } = require('../middlewares/authMiddleware');
+const { getUsers, getUserProfile, updateUserProfile, updateUserStation, updateUserTimeToLeave, updateUserCoordinate, redirectToCognito } = require('../controllers/userController');
+const { verifyToken } = require('../middlewares/cognitoMiddleware');
 const router = express.Router();
 
 // GET 요청으로 모든 사용자 조회
@@ -17,16 +17,16 @@ router.get('/', getUsers);
  * @swagger
  * /api/user/login:
  *   post:
- *     summary: 카카오 로그인 요청
+ *     summary: Cognito 로그인 요청 URL로 리다이렉트
  *     tags: [User]
- *     description: 사용자가 카카오 로그인 페이지로 리다이렉트됩니다.
+ *     description: 사용자를 Cognito 로그인 요청 URL로 리다이렉트 시킵니다.
  *     responses:
  *       302:
  *         description: 카카오 로그인 페이지로 성공적으로 리다이렉트됩니다.
  *       500:
  *         description: 서버 오류 발생.
  */
-router.post('/login', redirectToKakao);
+router.post('/login', redirectToCognito);
 
 /**
  * @swagger
@@ -46,8 +46,7 @@ router.post('/login', redirectToKakao);
  *               user:
  *                 value: {
  *                   "_id": "670a82d3149a8c0f5689f57f",
- *                   "snsId": "3739459145",
- *                   "nickname": "제형",
+ *                   "username": "kisusu115",
  *                   "weight": 1,
  *                   "age": 24,
  *                   "gender": "Male",
@@ -93,7 +92,7 @@ router.post('/login', redirectToKakao);
  *                   type: string
  *                   example: 'Server error'
  */
-router.get('/profile', authenticateSession, getUserProfile);
+router.get('/profile', verifyToken, getUserProfile);
 
 /**
  * @swagger
@@ -132,8 +131,7 @@ router.get('/profile', authenticateSession, getUserProfile);
  *               user:
  *                 value: {
  *                   "_id": "670a82d3149a8c0f5689f57f",
- *                   "snsId": "3739459145",
- *                   "nickname": "제형",
+ *                   "username": "kisusu115",
  *                   "weight": 1,
  *                   "age": 30,
  *                   "gender": "Male",
@@ -179,7 +177,7 @@ router.get('/profile', authenticateSession, getUserProfile);
  *                   type: string
  *                   example: 'Server error'
  */
-router.post('/profile', authenticateSession, updateUserProfile);
+router.post('/profile', verifyToken, updateUserProfile);
 
 /**
  * @swagger
@@ -218,8 +216,7 @@ router.post('/profile', authenticateSession, updateUserProfile);
  *               user:
  *                 value: {
  *                   "_id": "670a82d3149a8c0f5689f57f",
- *                   "snsId": "3739459145",
- *                   "nickname": "제형",
+ *                   "username": "kisusu115",
  *                   "weight": 1,
  *                   "age": 24,
  *                   "gender": "Male",
@@ -265,7 +262,7 @@ router.post('/profile', authenticateSession, updateUserProfile);
  *                   type: string
  *                   example: 'Server error'
  */
-router.post('/station', authenticateSession, updateUserStation);
+router.post('/station', verifyToken, updateUserStation);
 
 /**
  * @swagger
@@ -296,8 +293,7 @@ router.post('/station', authenticateSession, updateUserStation);
  *               user:
  *                 value: {
  *                   "_id": "670a82d3149a8c0f5689f57f",
- *                   "snsId": "3739459145",
- *                   "nickname": "제형",
+ *                   "username": "kisusu115",
  *                   "weight": 1,
  *                   "age": 24,
  *                   "gender": "Male",
@@ -343,7 +339,7 @@ router.post('/station', authenticateSession, updateUserStation);
  *                   type: string
  *                   example: 'Server error'
  */
-router.post('/timeToLeave', authenticateSession, updateUserTimeToLeave);
+router.post('/timeToLeave', verifyToken, updateUserTimeToLeave);
 
 /**
  * @swagger
@@ -378,8 +374,7 @@ router.post('/timeToLeave', authenticateSession, updateUserTimeToLeave);
  *               user:
  *                 value: {
  *                   "_id": "670a82d3149a8c0f5689f57f",
- *                   "snsId": "3739459145",
- *                   "nickname": "제형",
+ *                   "username": "kisusu115",
  *                   "weight": 1,
  *                   "age": 24,
  *                   "gender": "Male",
@@ -424,6 +419,6 @@ router.post('/timeToLeave', authenticateSession, updateUserTimeToLeave);
  *                   type: string
  *                   example: 'Server error'
  */
-router.post('/coordinate', authenticateSession, updateUserCoordinate);
+router.post('/coordinate', verifyToken, updateUserCoordinate);
 
 module.exports = router;
