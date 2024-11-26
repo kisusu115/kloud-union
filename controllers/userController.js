@@ -1,9 +1,9 @@
-const { getAllUsers, findUserBySnsId, updateUserBySnsId } = require('../services/userService');
+const { getAllUsers, findUserByUsername, updateUserByUsername } = require('../services/userService');
 
-// 카카오 로그인 창으로 리다이렉트
-const redirectToKakao = async (req, res) => {
+// Cognito 로그인 창으로 리다이렉트
+const redirectToCognito = async (req, res) => {
   try {
-    res.status(302).redirect('/auth/kakao');
+    res.status(302).redirect('/api/cognito/login');
   } catch (error) {
     res.status(400).json({ message: 'Error redirecting to Kakao', error });
   }
@@ -21,14 +21,14 @@ const getUsers = async (req, res) => {
 
 // 특정 사용자 정보 조회
 const getUserProfile = async (req, res) => {
-    const snsId = req.user ? req.user.snsId : null; // req.user가 정의되어 있는지 확인
+    const username = req.user ? req.user.username : null; // req.user가 정의되어 있는지 확인
 
-    if (!snsId) {
-        return res.status(400).json({ error: 'snsId is required' });
+    if (!username) {
+        return res.status(400).json({ error: 'username is required' });
     }
 
     try {
-        const user = await findUserBySnsId(snsId);
+        const user = await findUserByUsername(username);
         if (!user) {
             return res.status(404).json({ error: 'User not found' });
         }
@@ -40,16 +40,16 @@ const getUserProfile = async (req, res) => {
 
 // 사용자 정보 수정
 const updateUserProfile = async (req, res) => {
-  const snsId = req.user ? req.user.snsId : null; // req.user가 정의되어 있는지 확인
+  const username = req.user ? req.user.username : null; // req.user가 정의되어 있는지 확인
 
-  if (!snsId) {
-      return res.status(400).json({ error: 'session\'s snsId is required' });
+  if (!username) {
+      return res.status(400).json({ error: 'username is required' });
   }
   
   const { age, gender, height } = req.body;
 
   try {
-    const user = await updateUserBySnsId(snsId, { age, gender, height });
+    const user = await updateUserByUsername(username, { age, gender, height });
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -62,16 +62,16 @@ const updateUserProfile = async (req, res) => {
 };
 
 const updateUserStation = async (req, res) => {
-  const snsId = req.user ? req.user.snsId : null; // req.user가 정의되어 있는지 확인
+  const username = req.user ? req.user.username : null; // req.user가 정의되어 있는지 확인
 
-  if (!snsId) {
-      return res.status(400).json({ error: 'session\'s snsId is required' });
+  if (!username) {
+      return res.status(400).json({ error: 'username is required' });
   }
   
   const { stationName, line, upDown } = req.body;
 
   try {
-    const user = await updateUserBySnsId(snsId, { stationName, line, upDown });
+    const user = await updateUserByUsername(username, { stationName, line, upDown });
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -84,16 +84,16 @@ const updateUserStation = async (req, res) => {
 }
 
 const updateUserTimeToLeave = async (req, res) => {
-  const snsId = req.user ? req.user.snsId : null; // req.user가 정의되어 있는지 확인
+  const username = req.user ? req.user.username : null; // req.user가 정의되어 있는지 확인
 
-  if (!snsId) {
-      return res.status(400).json({ error: 'session\'s snsId is required' });
+  if (!username) {
+      return res.status(400).json({ error: 'username is required' });
   }
   
   const { timeToLeave } = req.body;
 
   try {
-    const user = await updateUserBySnsId(snsId, { timeToLeave });
+    const user = await updateUserByUsername(username, { timeToLeave });
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -106,16 +106,16 @@ const updateUserTimeToLeave = async (req, res) => {
 }
 
 const updateUserCoordinate = async (req, res) => {
-  const snsId = req.user ? req.user.snsId : null; // req.user가 정의되어 있는지 확인
+  const username = req.user ? req.user.username : null; // req.user가 정의되어 있는지 확인
 
-  if (!snsId) {
-      return res.status(400).json({ error: 'session\'s snsId is required' });
+  if (!username) {
+      return res.status(400).json({ error: 'username is required' });
   }
   
   const { latitude, longitude } = req.body;
 
   try {
-    const user = await updateUserBySnsId(snsId, { latitude, longitude });
+    const user = await updateUserByUsername(username, { latitude, longitude });
 
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -134,5 +134,5 @@ module.exports = {
   updateUserStation,
   updateUserTimeToLeave,
   updateUserCoordinate,
-  redirectToKakao,
+  redirectToCognito,
 };

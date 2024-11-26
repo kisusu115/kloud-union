@@ -11,6 +11,7 @@ const weatherRoutes = require('./routes/weatherRoutes');
 const todoRoutes = require('./routes/todoRoutes');
 const alarmRoutes = require('./routes/alarmRoutes');
 const authRoutes = require('./routes/authRoutes');
+const cognitoRoutes = require('./routes/cognitoRoutes');
 
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
@@ -60,11 +61,14 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 app.use('/api/user', userRoutes);           // 사용자 관련 API 라우트
 app.use('/api/subway', subwayRoutes);       // 대중교통 관련 API 라우트
-app.use('/api/page', pageRoutes);           // 페이지 반환 API 라우트
 app.use('/api/distance', distanceRoutes);   // 거리 관련 API 라우트
 app.use('/api/weather', weatherRoutes);     // 날씨 관련 API 라우트
 app.use('/api/todo', todoRoutes);           // TODO 관련 API 라우트
 app.use('/api/alarm', alarmRoutes);         // 알람 관련 API 라우트
+app.use('/api/cognito', cognitoRoutes);     // 사용자 관련 API 라우트
+
+// 하단은 미사용 엔드포인드
+app.use('/api/page', pageRoutes);           // 페이지 반환 API 라우트
 app.use('/auth', authRoutes);               // 소설로그인 관련 라우트
 
 // 서버 시작

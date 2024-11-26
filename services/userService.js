@@ -10,18 +10,18 @@ const getAllUsers = async () => {
 };
 
 // 특정 사용자 조회
-const findUserBySnsId = async (snsId) => {
+const findUserByUsername = async (username) => {
     try {
-        return await User.findOne({ snsId });
+        return await User.findOne({ username });
     } catch (error) {
         throw error;
     }
 };
 
 // 사용자 정보 수정
-const updateUserBySnsId = async (snsId, updateData) => {
+const updateUserByUsername = async (username, updateData) => {
     try {
-        return await User.findOneAndUpdate({ snsId }, updateData, { new: true, runValidators: true });
+        return await User.findOneAndUpdate({ username }, updateData, { new: true, runValidators: true });
     } catch (error) {
         throw new Error('Error updating user');
     }
@@ -29,6 +29,6 @@ const updateUserBySnsId = async (snsId, updateData) => {
 
 module.exports = {
     getAllUsers,
-    findUserBySnsId,
-    updateUserBySnsId,
+    findUserByUsername,
+    updateUserByUsername,
 };
