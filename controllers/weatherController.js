@@ -1,4 +1,4 @@
-const { getWeatherForecast } = require('../services/weatherService');
+const { getWeatherForecast, getWeatherResponseList } = require('../services/weatherService');
 
 const getHourlyPrecipitation = async (req, res) => {
     const { nx, ny } = req.query;
@@ -20,6 +20,61 @@ const getHourlyPrecipitation = async (req, res) => {
     }
 };
 
+const sendWeatherInfo = async (req, res) => {
+    const { nowTime, longitude, latitude } = req.query;
+
+    if (!longitude || !latitude) {
+        return res.status(400).json({ error: 'longitude, latitude 값이 필요합니다.' });
+    }
+
+    const currentDate = new Date();
+    const nowDate = currentDate.toISOString().slice(0, 10).replace(/-/g, ''); // 오늘 날짜 (YYYYMMDD)
+    const defaultTime = '0500'; // 기준 시간 (05시), 다른 걸로 주면 응답이 안옴
+
+    // 현재 시각과 가장 가까운 정시 문자열 도출 EX)0800
+    let hours = currentDate.getHours();
+    let minutes = currentDate.getMinutes();
+    hours = (minutes >= 30) ? (hours + 1) % 24 : hours;
+    const timeString = `${hours.toString().padStart(2, '0')}00`;
+
+    try {
+        // 위경도에서 GridXY 좌표 변환이..
+        const weatherList = await getWeatherResponseList(nowDate, defaultTime, 62, 126);
+
+        let skyStatus = null;
+        const tmpList = {};
+        const popList = {};
+
+        weatherList.forEach((item) => {
+            const { category, fcstTime, fcstValue, fcstDate } = item;
+
+            if (nowDate === fcstDate) {
+                if (category === 'TMP') {
+                    tmpList[fcstTime] = parseFloat(fcstValue);
+                } else if (category === 'POP') {
+                    popList[fcstTime] = parseInt(fcstValue, 10);
+                } else if (category === 'SKY' && skyStatus === null && fcstTime === timeString) {
+                    // 맑음(1), 구름많음(3), 흐림(4)
+                    skyStatus = parseInt(fcstValue, 10);
+                }
+            }
+        });
+
+        return res.status(200).json({
+            skyStatus,
+            tmpList,
+            popList,
+        });
+    } catch (error) {
+        return res.status(500).json({
+            error: 'Internal Server Error',
+            message: error.message,
+        });
+    }
+};
+
+
 module.exports = {
-    getHourlyPrecipitation
+    getHourlyPrecipitation,
+    sendWeatherInfo,
 };
