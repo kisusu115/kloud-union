@@ -31,6 +31,30 @@ const getWeatherForecast = async (baseDate, baseTime, nx, ny) => {
     }
 };
 
+const getWeatherResponseList = async (baseDate, baseTime, nx, ny) => {
+    const url = process.env.WEATHER_FORECAST_API_URL;
+    const params = {
+        serviceKey: process.env.WEATHER_FORECAST_API_KEY,  // API 키
+        pageNo: 1,
+        numOfRows: 1000,
+        dataType: 'JSON',
+        base_date: baseDate,  // YYYYMMDD 형식의 날짜
+        base_time: baseTime,  // HHMM 형식의 시간
+        nx: nx,  // X 좌표, gridX 형태
+        ny: ny   // Y 좌표, gridY 형태
+    };
+
+    try {
+        const response = await axios.get(url, { params });
+        const items = response.data.response.body.items.item;
+        return items || 'No available data';
+    } catch (error) {
+        console.error('Error fetching weather data:', error.message);
+        throw new Error('Error fetching weather data');
+    }
+};
+
 module.exports = {
-    getWeatherForecast
+    getWeatherForecast,
+    getWeatherResponseList,
 };
