@@ -1,4 +1,5 @@
 const { getWeatherForecast, getWeatherResponseList } = require('../services/weatherService');
+const { convertToXY } = require("../utils/gridConverter");
 
 const getHourlyPrecipitation = async (req, res) => {
     const { nx, ny } = req.query;
@@ -21,7 +22,7 @@ const getHourlyPrecipitation = async (req, res) => {
 };
 
 const sendWeatherInfo = async (req, res) => {
-    const { nowTime, longitude, latitude } = req.query;
+    const { longitude, latitude } = req.query;
 
     if (!longitude || !latitude) {
         return res.status(400).json({ error: 'longitude, latitude 값이 필요합니다.' });
@@ -37,9 +38,12 @@ const sendWeatherInfo = async (req, res) => {
     hours = (minutes >= 30) ? (hours + 1) % 24 : hours;
     const timeString = `${hours.toString().padStart(2, '0')}00`;
 
+    const gridValue = convertToXY(latitude, longitude);
+    const gridX = gridValue['x'];
+    const gridY = gridValue['y'];
+
     try {
-        // 위경도에서 GridXY 좌표 변환이..
-        const weatherList = await getWeatherResponseList(nowDate, defaultTime, 62, 126);
+        const weatherList = await getWeatherResponseList(nowDate, defaultTime, gridX, gridY);
 
         let skyStatus = null;
         const tmpList = {};
