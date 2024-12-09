@@ -3,6 +3,8 @@ const session = require('express-session');
 const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
+const serverless = require('serverless-http');
+
 const userRoutes = require('./routes/userRoutes');
 const subwayRoutes = require('./routes/subwayRoutes');
 const pageRoutes = require('./routes/pageRoutes');
@@ -15,16 +17,15 @@ const cognitoRoutes = require('./routes/cognitoRoutes');
 
 const swaggerJsDoc = require('swagger-jsdoc');
 const swaggerUi = require('swagger-ui-express');
-const swaggerOptions = require('./swagger'); // swagger.js 파일 가져오기
-
-// Swagger
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
+const swaggerOptions = require('./swagger');
 
 // 환경 변수 설정 로드
 dotenv.config();
 
+// Swagger 설정
+const swaggerDocs = swaggerJsDoc(swaggerOptions);
+
 const app = express();
-const PORT = process.env.PORT || 3000;
 
 // 세션 미들웨어 설정
 app.use(session({
@@ -52,13 +53,12 @@ app.use(express.json());
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views')); // views 폴더 경로 설정
 
+// 기본 라우트
 app.get('/', (req, res) => {
   res.status(302).redirect('/api/page/login');
 });
 
 // 라우터 설정
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
-
 app.use('/api/user', userRoutes);           // 사용자 관련 API 라우트
 app.use('/api/subway', subwayRoutes);       // 대중교통 관련 API 라우트
 app.use('/api/distance', distanceRoutes);   // 거리 관련 API 라우트
@@ -66,12 +66,10 @@ app.use('/api/weather', weatherRoutes);     // 날씨 관련 API 라우트
 app.use('/api/todo', todoRoutes);           // TODO 관련 API 라우트
 app.use('/api/alarm', alarmRoutes);         // 알람 관련 API 라우트
 app.use('/api/cognito', cognitoRoutes);     // 사용자 관련 API 라우트
-
-// 하단은 미사용 엔드포인드
 app.use('/api/page', pageRoutes);           // 페이지 반환 API 라우트
-app.use('/auth', authRoutes);               // 소설로그인 관련 라우트
+app.use('/auth', authRoutes);               // 소셜로그인 관련 라우트
 
-// 서버 시작
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
-});
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
+// Lambda 핸들러
+module.exports.handler = serverless(app);
