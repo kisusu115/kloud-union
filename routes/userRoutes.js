@@ -16,7 +16,7 @@ router.get('/', getUsers);
 /**
  * @swagger
  * /api/user/login:
- *   post:
+ *   get:
  *     summary: Cognito 로그인 요청 URL로 리다이렉트
  *     tags: [User]
  *     description: 사용자를 Cognito 로그인 요청 URL로 리다이렉트 시킵니다.
@@ -26,7 +26,7 @@ router.get('/', getUsers);
  *       500:
  *         description: 서버 오류 발생.
  */
-router.post('/login', redirectToCognito);
+router.get('/login', redirectToCognito);
 
 /**
  * @swagger

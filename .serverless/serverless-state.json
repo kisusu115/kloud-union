@@ -117,7 +117,7 @@
             "Properties": {
               "Code": {
                 "S3Bucket": "serverless-framework-deployments-ap-northeast-2-ec2a495a-3ad2",
-                "S3Key": "serverless/morning-backend/dev/1733743436695-2024-12-09T11:23:56.695Z/morning-backend.zip"
+                "S3Key": "serverless/morning-backend/dev/1733750310825-2024-12-09T13:18:30.825Z/morning-backend.zip"
               },
               "Handler": "app.handler",
               "Runtime": "nodejs18.x",
@@ -152,14 +152,14 @@
               "AppLogGroup"
             ]
           },
-          "AppLambdaVersionmSmk4kSnU3ZihfpSnNPvdEr9ZZxeDg7LpFWJZ0eesU": {
+          "AppLambdaVersionLJY2WX7LpcgZhHFRqdrKcGEuflViOyQD9yMKN8b5Y": {
             "Type": "AWS::Lambda::Version",
             "DeletionPolicy": "Retain",
             "Properties": {
               "FunctionName": {
                 "Ref": "AppLambdaFunction"
               },
-              "CodeSha256": "wxg3wdPf4S3Re/2wi0NqXlVnP+M0JTkavrb6KObhahA="
+              "CodeSha256": "39oPZbkQ4TikWUg20s7tj8jS/ylHm8bKuWMGPBTxpVQ="
             }
           },
           "HttpApi": {
@@ -265,7 +265,7 @@
           "AppLambdaFunctionQualifiedArn": {
             "Description": "Current Lambda function version",
             "Value": {
-              "Ref": "AppLambdaVersionmSmk4kSnU3ZihfpSnNPvdEr9ZZxeDg7LpFWJZ0eesU"
+              "Ref": "AppLambdaVersionLJY2WX7LpcgZhHFRqdrKcGEuflViOyQD9yMKN8b5Y"
             },
             "Export": {
               "Name": "sls-morning-backend-dev-AppLambdaFunctionQualifiedArn"
@@ -334,7 +334,7 @@
         "timeout": 6,
         "runtime": "nodejs18.x",
         "vpc": {},
-        "versionLogicalId": "AppLambdaVersionmSmk4kSnU3ZihfpSnNPvdEr9ZZxeDg7LpFWJZ0eesU"
+        "versionLogicalId": "AppLambdaVersionLJY2WX7LpcgZhHFRqdrKcGEuflViOyQD9yMKN8b5Y"
       }
     },
     "configValidationMode": "warn",
@@ -369,7 +369,7 @@
     "layers": {}
   },
   "package": {
-    "artifactDirectoryName": "serverless/morning-backend/dev/1733743436695-2024-12-09T11:23:56.695Z",
+    "artifactDirectoryName": "serverless/morning-backend/dev/1733750310825-2024-12-09T13:18:30.825Z",
     "artifact": "morning-backend.zip"
   }
 }

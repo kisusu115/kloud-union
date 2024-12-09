@@ -8,7 +8,7 @@ const User = require('../models/userModel');
 const cognitoAuthenticate = (req, res) => {
     const domain = 'https://morning.auth.ap-northeast-2.amazoncognito.com';
     const clientId = '6555bpitq33p0r7l1r301ct806'; // 실제 App Client ID
-    const redirectUri = 'http://localhost:3000/api/cognito/callback'; // 실제 리다이렉트 URI
+    const redirectUri = 'https://o5cx6i4kdj.execute-api.ap-northeast-2.amazonaws.com/api/cognito/callback'; // 실제 리다이렉트 URI
     const userPoolId = 'ap-northeast-2_F75bATFk3'; // 실제 User Pool ID
 
     const loginUrl = `${domain}/login?` + querystring.stringify({
@@ -25,7 +25,7 @@ const cognitoAuthenticate = (req, res) => {
 const cognitoAuthenticateCallback = async (req, res) => {
     const domain = 'https://morning.auth.ap-northeast-2.amazoncognito.com';
     const clientId = '6555bpitq33p0r7l1r301ct806'; // 실제 App Client ID
-    const redirectUri = 'http://localhost:3000/api/cognito/callback'; // 실제 리다이렉트 URI
+    const redirectUri = 'https://o5cx6i4kdj.execute-api.ap-northeast-2.amazonaws.com/api/cognito/callback'; // 실제 리다이렉트 URI
     const userPoolId = 'ap-northeast-2_F75bATFk3'; // 실제 User Pool ID
 
     const { code } = req.query; // 리다이렉트된 URL에서 `code` 파라미터를 받음

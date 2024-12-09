@@ -39,7 +39,7 @@ app.use(session({
 require('./passport/index')(app);
 
 // 정적 파일 경로 설정
-app.use(express.static(path.join(__dirname, 'public')));
+// app.use(express.static(path.join(__dirname, 'public')));
 
 // MongoDB 연결 설정
 mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopology: true })
@@ -58,6 +58,8 @@ app.get('/', (req, res) => {
   res.status(302).redirect('/api/page/login');
 });
 
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+
 // 라우터 설정
 app.use('/api/user', userRoutes);           // 사용자 관련 API 라우트
 app.use('/api/subway', subwayRoutes);       // 대중교통 관련 API 라우트
@@ -68,8 +70,6 @@ app.use('/api/alarm', alarmRoutes);         // 알람 관련 API 라우트
 app.use('/api/cognito', cognitoRoutes);     // 사용자 관련 API 라우트
 app.use('/api/page', pageRoutes);           // 페이지 반환 API 라우트
 app.use('/auth', authRoutes);               // 소셜로그인 관련 라우트
-
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
 
 // Lambda 핸들러
 module.exports.handler = serverless(app);
