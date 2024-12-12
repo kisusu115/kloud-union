@@ -75,15 +75,6 @@ const cognitoAuthenticateCallback = async (req, res) => {
                 res.status(500).json({ error: 'Failed to create new user' });
             }
         }
-        
-        // res.json({access_token, id_token, refresh_token});
-
-        res.cookie('accessToken', access_token, {
-            httpOnly: true,
-            secure: true, // HTTPS에서만 전송
-            sameSite: 'Strict',
-            maxAge: 60 * 60 * 1000,
-        });
 
         res.redirect('https://kloud-union-fe.vercel.app/token-redirect?'+"access_token="+access_token);
 
