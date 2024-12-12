@@ -91,7 +91,7 @@
       "Properties": {
         "Code": {
           "S3Bucket": "serverless-framework-deployments-ap-northeast-2-ec2a495a-3ad2",
-          "S3Key": "serverless/morning-backend/dev/1733750310825-2024-12-09T13:18:30.825Z/morning-backend.zip"
+          "S3Key": "serverless/morning-backend/dev/1733997398143-2024-12-12T09:56:38.143Z/morning-backend.zip"
         },
         "Handler": "app.handler",
         "Runtime": "nodejs18.x",
@@ -126,14 +126,14 @@
         "AppLogGroup"
       ]
     },
-    "AppLambdaVersionLJY2WX7LpcgZhHFRqdrKcGEuflViOyQD9yMKN8b5Y": {
+    "AppLambdaVersionNCzOqNijJlT2NPw6DU6PIMDvslp5LK7eMfJ2OoOilio": {
       "Type": "AWS::Lambda::Version",
       "DeletionPolicy": "Retain",
       "Properties": {
         "FunctionName": {
           "Ref": "AppLambdaFunction"
         },
-        "CodeSha256": "39oPZbkQ4TikWUg20s7tj8jS/ylHm8bKuWMGPBTxpVQ="
+        "CodeSha256": "BhaRgMIkPRwdOmZIFlMyLt0TdSLEgFqmHfV4L1nb9KQ="
       }
     },
     "HttpApi": {
@@ -242,7 +242,7 @@
     "AppLambdaFunctionQualifiedArn": {
       "Description": "Current Lambda function version",
       "Value": {
-        "Ref": "AppLambdaVersionLJY2WX7LpcgZhHFRqdrKcGEuflViOyQD9yMKN8b5Y"
+        "Ref": "AppLambdaVersionNCzOqNijJlT2NPw6DU6PIMDvslp5LK7eMfJ2OoOilio"
       },
       "Export": {
         "Name": "sls-morning-backend-dev-AppLambdaFunctionQualifiedArn"
