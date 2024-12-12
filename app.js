@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const dotenv = require('dotenv');
 const path = require('path');
 const serverless = require('serverless-http');
+const cors = require('cors');
 
 const userRoutes = require('./routes/userRoutes');
 const subwayRoutes = require('./routes/subwayRoutes');
@@ -27,12 +28,21 @@ const swaggerDocs = swaggerJsDoc(swaggerOptions);
 
 const app = express();
 
+// CORS 설정 
+app.use(cors({
+  origin: ['https://morning.auth.ap-northeast-2.amazoncognito.com', 'http://localhost:8080','http://localhost:5173', 'http://localhost:3000'
+    , 'https://kloud-union-fe.vercel.app'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true,
+}));
+
+
 // 세션 미들웨어 설정
 app.use(session({
   secret: process.env.SESSION_SECRET, // 비밀키 설정
   resave: false,
   saveUninitialized: true,
-  cookie: { secure: false }, // HTTPS가 아닌 경우 false로 설정
+  cookie: { secure: true, sameSite: 'None' },
 }));
 
 // Passport 초기화
